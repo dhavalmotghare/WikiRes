@@ -1,8 +1,3 @@
-/**
- * Copyright (c) 2015, Symantec Corporation. ALL RIGHTS RESERVED.
- * Description:
- * Watermark id: CB70-2684-7135-66-15-8
- */
 
 package com.dhavalmotghare.wikires.Util;
 
