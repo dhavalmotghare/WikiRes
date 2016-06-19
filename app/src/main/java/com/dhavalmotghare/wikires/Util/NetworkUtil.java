@@ -1,4 +1,3 @@
-
 package com.dhavalmotghare.wikires.Util;
 
 import android.content.Context;
@@ -44,8 +43,6 @@ public class NetworkUtil {
 
     }
 
-    ;
-
     /**
      * Volley post request class to handle a HTTP post request
      */
@@ -89,8 +86,6 @@ public class NetworkUtil {
 
     }
 
-    ;
-
     /**
      * Submit the request (either get or post)
      *
@@ -119,14 +114,26 @@ public class NetworkUtil {
         queue.add(sr);
     }
 
-    public static String urlEncodeUTF8(String s) {
+    /**
+     * Encode a string using 'UTF-8'. {@see URLEncoder#encode}
+     *
+     * @param string
+     * @return - encoded string
+     */
+    public static String urlEncodeUTF8(String string) {
         try {
-            return URLEncoder.encode(s, "UTF-8");
+            return URLEncoder.encode(string, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             throw new UnsupportedOperationException(e);
         }
     }
 
+    /**
+     * Encode map parameters using 'UTF-8' and append them as url parameters. {@see URLEncoder#encode}
+     *
+     * @param map - map of key value pairs to be encoded
+     * @return - UTF-8 encoded url parameter string
+     */
     public static String urlEncodeUTF8(Map<?, ?> map) {
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<?, ?> entry : map.entrySet()) {
@@ -140,5 +147,4 @@ public class NetworkUtil {
         }
         return sb.toString();
     }
-
 }

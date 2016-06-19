@@ -49,7 +49,7 @@ public class WikiResponse {
 
     public WikiResponse(State state, JSONObject responseObject) {
         mRequestState = state;
-        mResponseObject = new JSONObject();
+        mResponseObject = responseObject;
     }
 
     public State getRequestState() {

@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/padding_gap_small"
+    android:paddingLeft="@dimen/padding_gap_small"
+    android:paddingRight="@dimen/padding_gap_small"
+    android:paddingTop="@dimen/padding_content_large_gap"
     tools:context="com.dhavalmotghare.wikires.SearchResultActivity"
     tools:showIn="@layout/activity_search_result">
 
     <LinearLayout
-        android:id="@+id/btns"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -23,7 +26,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="top"
             android:layout_margin="@dimen/padding_gap_small"
-            android:autoText="true"
             android:layout_weight="0.8"
             android:hint="@string/text_search" />
 
@@ -36,14 +38,20 @@
             android:weightSum="1">
 
             <ImageButton
-                android:id="@+id/btn_stop"
+                android:id="@+id/btn_search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|bottom"
-                android:background="@android:color/transparent"
+                android:background="@android:color/holo_blue_light"
                 android:src="@mipmap/ic_action_search" />
         </LinearLayout>
 
     </LinearLayout>
 
-</android.support.v4.widget.NestedScrollView>
+    <ListView
+        android:id="@+id/search_results"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"></ListView>
+</LinearLayout>
+
+
