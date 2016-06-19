@@ -8,16 +8,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * "575230":{"pageid":575230,
- * "ns":0,
- * "title":"Blackbirding",
- * "index":4,
- * "thumbnail":
- * {"source":"https:\/\/upload.wikimedia.org\/wikipedia\/commons\/thumb\/2\/20\/Seizure_of_blackbirder_Daphne.jpg\/100px-Seizure_of_blackbirder_Daphne.jpg",
- * "width":100,
- * "height":90}
- */
+
 public class SearchItem {
 
     private String mTitle;

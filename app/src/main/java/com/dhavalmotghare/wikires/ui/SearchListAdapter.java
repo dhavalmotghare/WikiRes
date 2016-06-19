@@ -15,7 +15,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import static android.R.color.holo_orange_light;
 import static android.R.color.transparent;
 
 public class SearchListAdapter extends BaseAdapter {
@@ -63,7 +62,6 @@ public class SearchListAdapter extends BaseAdapter {
 
         if (convertView == null) {
             holder = new Holder();
-
             view = inflater.inflate(R.layout.search_list_item, null);
             holder.itemText = (TextView) view.findViewById(R.id.search_text);
             holder.itemImage = (ImageView) view.findViewById(R.id.search_image);

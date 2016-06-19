@@ -5,7 +5,7 @@ import android.test.InstrumentationTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
 import com.dhavalmotghare.wikires.model.SearchItem;
-import com.dhavalmotghare.wikires.wikiapi.WikiApi;
+import com.dhavalmotghare.wikires.wikiapi.WikiApiRequest;
 import com.dhavalmotghare.wikires.wikiapi.WikiResponse;
 
 import java.util.List;
@@ -28,13 +28,13 @@ public class SearchItemTest extends InstrumentationTestCase {
 
     public void testSearchItemParsing() throws Exception {
         final CountDownLatch latch = new CountDownLatch(1);
-        WikiApi wikiApi = new WikiApi(mContext, new WikiApi.WikiAPIListener() {
+        WikiApiRequest wikiApiRequest = new WikiApiRequest(mContext, new WikiApiRequest.WikiAPIListener() {
             @Override
             public void onComplete(String action, WikiResponse wikiResponse) {
                 assertNotNull(wikiResponse);
                 assertNotNull(action);
 
-                assertTrue(action.equals(WikiApi.ACTION_QUERY));
+                assertTrue(action.equals(WikiApiRequest.ACTION_QUERY));
                 assertTrue(wikiResponse.getRequestState() == WikiResponse.State.SUCCESS);
                 assertTrue(wikiResponse.getResponseObject() != null);
 
@@ -46,7 +46,7 @@ public class SearchItemTest extends InstrumentationTestCase {
                 latch.countDown();
             }
         });
-        wikiApi.query("Blackbird", 100, 50);
+        wikiApiRequest.query("Blackbird", 100, 50);
         assertTrue(latch.await(10, TimeUnit.SECONDS));
     }
 }

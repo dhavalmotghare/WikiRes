@@ -4,7 +4,7 @@ import android.content.Context;
 import android.test.InstrumentationTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
-import com.dhavalmotghare.wikires.wikiapi.WikiApi;
+import com.dhavalmotghare.wikires.wikiapi.WikiApiRequest;
 import com.dhavalmotghare.wikires.wikiapi.WikiResponse;
 
 import java.util.concurrent.CountDownLatch;
@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
  *
  */
 @SmallTest
-public class WikiApiTest extends InstrumentationTestCase {
+public class WikiApiRequestTest extends InstrumentationTestCase {
 
     private Context mContext;
 
@@ -26,19 +26,19 @@ public class WikiApiTest extends InstrumentationTestCase {
 
     public void testQueryAPI() throws Exception {
         final CountDownLatch latch = new CountDownLatch(1);
-        WikiApi wikiApi = new WikiApi(mContext, new WikiApi.WikiAPIListener() {
+        WikiApiRequest wikiApiRequest = new WikiApiRequest(mContext, new WikiApiRequest.WikiAPIListener() {
             @Override
             public void onComplete(String action, WikiResponse wikiResponse) {
                 assertNotNull(wikiResponse);
                 assertNotNull(action);
 
-                assertTrue(action.equals(WikiApi.ACTION_QUERY));
+                assertTrue(action.equals(WikiApiRequest.ACTION_QUERY));
                 assertTrue(wikiResponse.getRequestState() == WikiResponse.State.SUCCESS);
                 assertTrue(wikiResponse.getResponseObject() != null);
                 latch.countDown();
             }
         });
-        wikiApi.query("Blackbird", 100, 50);
+        wikiApiRequest.query("Blackbird", 100, 50);
         assertTrue(latch.await(5, TimeUnit.SECONDS));
     }
 }

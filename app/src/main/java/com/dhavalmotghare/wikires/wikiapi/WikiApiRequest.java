@@ -23,9 +23,9 @@ import java.util.Map;
 /**
  *
  */
-public class WikiApi implements Response.Listener<String>, Response.ErrorListener {
+public class WikiApiRequest implements Response.Listener<String>, Response.ErrorListener {
 
-    private static final String TAG = "WikiApi";
+    private static final String TAG = "WikiApiRequest";
     private static final String URL = "https://en.wikipedia.org/w/api.php";
 
     public static final String KEY_PROP = "prop";
@@ -43,6 +43,8 @@ public class WikiApi implements Response.Listener<String>, Response.ErrorListene
     private String mCurrentAction;
     private WikiAPIListener mWikiAPIListener;
 
+    private boolean mCancelled;
+
     /**
      * Callback for any API request (status - successful or failed)
      */
@@ -57,7 +59,7 @@ public class WikiApi implements Response.Listener<String>, Response.ErrorListene
         void onComplete(String action, WikiResponse wikiResponse);
     }
 
-    public WikiApi(Context context, WikiAPIListener wikiAPIListener) {
+    public WikiApiRequest(Context context, WikiAPIListener wikiAPIListener) {
         mContext = context;
         mWikiAPIListener = wikiAPIListener;
     }
@@ -96,15 +98,19 @@ public class WikiApi implements Response.Listener<String>, Response.ErrorListene
     }
 
     private void reportFailure(WikiResponse.State state) {
-        if (mWikiAPIListener != null) {
+        if (mWikiAPIListener != null && !mCancelled) {
             mWikiAPIListener.onComplete(mCurrentAction, new WikiResponse(state));
         }
     }
 
     private void reportSuccess(WikiResponse wikiResponse) {
-        if (mWikiAPIListener != null) {
+        if (mWikiAPIListener != null && !mCancelled) {
             mWikiAPIListener.onComplete(mCurrentAction, wikiResponse);
         }
+    }
+
+    public void cancelRequest() {
+        mCancelled = true;
     }
 
     @Override
@@ -135,7 +141,7 @@ public class WikiApi implements Response.Listener<String>, Response.ErrorListene
                 }
                 if (jsonObject != null) {
                     reportSuccess(new WikiResponse(WikiResponse.State.SUCCESS, jsonObject));
-                    Log.d(TAG,"Json Response - " + jsonObject.toString());
+                    Log.d(TAG, "Json Response - " + jsonObject.toString());
                 } else {
                     reportFailure(WikiResponse.State.FAILURE);
                 }
