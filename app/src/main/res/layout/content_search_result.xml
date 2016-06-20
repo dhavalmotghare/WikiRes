@@ -4,54 +4,40 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_color"
     android:orientation="vertical"
     android:paddingBottom="@dimen/padding_gap_small"
-    android:paddingLeft="@dimen/padding_gap_small"
-    android:paddingRight="@dimen/padding_gap_small"
     android:paddingTop="@dimen/padding_content_large_gap"
     tools:context="com.dhavalmotghare.wikires.SearchResultActivity"
     tools:showIn="@layout/activity_search_result">
 
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:orientation="horizontal"
-        android:padding="@dimen/padding_content_medium_gap"
-        android:weightSum="1">
+        android:background="@color/background_color"
+        android:orientation="horizontal">
 
         <EditText
             android:id="@+id/search_query"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
-            android:layout_margin="@dimen/padding_gap_small"
-            android:layout_weight="0.8"
+            android:layout_marginTop="@dimen/padding_content_medium_gap"
+            android:fontFamily="sans-serif"
+            android:background="@drawable/edit_text_background"
             android:hint="@string/text_search" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="0.2"
-            android:orientation="vertical"
-            android:weightSum="1">
-
-            <ImageButton
-                android:id="@+id/btn_search"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|bottom"
-                android:background="@android:color/holo_blue_light"
-                android:src="@mipmap/ic_action_search" />
-        </LinearLayout>
 
     </LinearLayout>
 
     <ListView
         android:id="@+id/search_results"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"></ListView>
+        android:layout_height="fill_parent"
+        android:layout_marginTop="@dimen/padding_gap_small"
+        android:dividerHeight="2dp"
+        android:divider="@color/background_color"
+        android:background="@color/background_color" />
 </LinearLayout>
 
 

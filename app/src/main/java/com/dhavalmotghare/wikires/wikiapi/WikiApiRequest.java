@@ -40,6 +40,7 @@ public class WikiApiRequest implements Response.Listener<String>, Response.Error
     public static final String ACTION_QUERY = "query";
 
     private Context mContext;
+    private String mSearchTerm;
     private String mCurrentAction;
     private WikiAPIListener mWikiAPIListener;
 
@@ -77,6 +78,7 @@ public class WikiApiRequest implements Response.Listener<String>, Response.Error
 
         String urlParams = NetworkUtil.urlEncodeUTF8(params);
 
+        mSearchTerm = searchTerm;
         mCurrentAction = ACTION_QUERY;
         sendRequest(URL, urlParams, false);
     }
@@ -107,6 +109,10 @@ public class WikiApiRequest implements Response.Listener<String>, Response.Error
         if (mWikiAPIListener != null && !mCancelled) {
             mWikiAPIListener.onComplete(mCurrentAction, wikiResponse);
         }
+    }
+
+    public String getSearchTerm() {
+        return mSearchTerm;
     }
 
     public void cancelRequest() {

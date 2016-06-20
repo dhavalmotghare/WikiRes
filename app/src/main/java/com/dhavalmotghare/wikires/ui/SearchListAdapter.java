@@ -15,8 +15,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import static android.R.color.transparent;
-
 public class SearchListAdapter extends BaseAdapter {
 
     private Context mContext;
@@ -51,7 +49,8 @@ public class SearchListAdapter extends BaseAdapter {
     }
 
     public class Holder {
-        TextView itemText;
+        TextView itemID;
+        TextView itemTitle;
         ImageView itemImage;
     }
 
@@ -63,7 +62,8 @@ public class SearchListAdapter extends BaseAdapter {
         if (convertView == null) {
             holder = new Holder();
             view = inflater.inflate(R.layout.search_list_item, null);
-            holder.itemText = (TextView) view.findViewById(R.id.search_text);
+            holder.itemID = (TextView) view.findViewById(R.id.search_item_page_id);
+            holder.itemTitle = (TextView) view.findViewById(R.id.search_item_title);
             holder.itemImage = (ImageView) view.findViewById(R.id.search_image);
             holder.itemImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
             view.setTag(holder);
@@ -72,24 +72,24 @@ public class SearchListAdapter extends BaseAdapter {
         }
 
         if (mSearchItems.size() <= 0) {
-            holder.itemText.setText("No Data");
+            holder.itemTitle.setText("No Data");
         } else {
-            holder.itemText.setText(mSearchItems.get(position).getTitle());
+            holder.itemID.setText(mSearchItems.get(position).getPageID() + "");
+            holder.itemTitle.setText(mSearchItems.get(position).getTitle());
+            holder.itemImage.setImageResource(0);
 
             if (TextUtils.isEmpty(mSearchItems.get(position).getThumbnailUrl())) {
-                holder.itemImage.setImageResource(R.mipmap.placeholder);
+                holder.itemImage.setImageResource(R.mipmap.ic_texture_white_36dp);
                 holder.itemImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-                holder.itemImage.setBackgroundColor(mContext.getResources().getColor(R.color.colorPrimary));
+                holder.itemImage.setBackgroundColor(mContext.getResources().getColor(R.color.background_color));
             } else {
-                // Trigger the download of the URL asynchronously into the image view.
-                Picasso.with(mContext) //
+                Picasso.with(mContext)
                         .load(mSearchItems.get(position).getThumbnailUrl())
-                        .placeholder(R.mipmap.placeholder)
-                        .error(R.mipmap.placeholder)
+                        .noPlaceholder()
+                        .error(R.mipmap.ic_error_outline_white_36dp)
                         .fit()
-                        .centerCrop()//
+                        .centerCrop()
                         .into(holder.itemImage);
-                holder.itemImage.setBackgroundColor(mContext.getResources().getColor(transparent));
             }
         }
         return view;

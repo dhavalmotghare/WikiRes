@@ -23,11 +23,10 @@ import com.dhavalmotghare.wikires.wikiapi.WikiResponse;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchResultActivity extends AppCompatActivity implements View.OnClickListener {
+public class SearchResultActivity extends AppCompatActivity {
 
     private EditText mSearchField;
     private ListView mSearchResults;
-    private ImageButton mButtonSearch;
 
     private SearchTask mSearchTask;
     private List<SearchItem> mSearchItems;
@@ -43,10 +42,8 @@ public class SearchResultActivity extends AppCompatActivity implements View.OnCl
 
         mSearchListAdapter = new SearchListAdapter(this, mSearchItems);
         mSearchResults = (ListView) findViewById(R.id.search_results);
-        mButtonSearch = (ImageButton) findViewById(R.id.btn_search);
         mSearchField = (EditText) findViewById(R.id.search_query);
 
-        mButtonSearch.setOnClickListener(this);
         mSearchResults.setAdapter(mSearchListAdapter);
 
         mSearchTask = new SearchTask(mSearchField, this);
@@ -69,13 +66,6 @@ public class SearchResultActivity extends AppCompatActivity implements View.OnCl
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (!mSearchTask.isTaskRunning()) {
-            mSearchTask.start();
-        }
     }
 
     public class SearchTask implements Runnable, WikiApiRequest.WikiAPIListener, TextWatcher {
@@ -123,6 +113,11 @@ public class SearchResultActivity extends AppCompatActivity implements View.OnCl
                         mSearchItems.clear();
                         updateList();
                     }
+                } else {
+                    if (TextUtils.isEmpty(mSearchTerm)) {
+                        mSearchItems.clear();
+                        updateList();
+                    }
                 }
 
                 try {
@@ -141,18 +136,17 @@ public class SearchResultActivity extends AppCompatActivity implements View.OnCl
             this.mTaskDone = true;
         }
 
-        public boolean isTaskRunning() {
-            return mTaskRunning;
-        }
-
         private boolean newInput() {
-            String input = mSearchTextSource.getText().toString();
+            mSearchTerm = mSearchTextSource.getText().toString();
 
-            if (!(input == null ? mSearchTerm == null : input.equals(mSearchTerm))) {
-                mSearchTerm = input;
-                return true;
+            if (mWikiApiRequest != null) {
+                String currentSearchTerm = mWikiApiRequest.getSearchTerm();
+                if (!(currentSearchTerm == null ? mSearchTerm == null : currentSearchTerm.equals(mSearchTerm))) {
+                    return true;
+                }
+                return false;
             }
-            return false;
+            return true;
         }
 
         @Override
@@ -177,7 +171,8 @@ public class SearchResultActivity extends AppCompatActivity implements View.OnCl
         }
 
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
 
         public void start() {
             if (!mTaskRunning) {
@@ -193,6 +188,7 @@ public class SearchResultActivity extends AppCompatActivity implements View.OnCl
         }
 
         @Override
-        public void afterTextChanged(Editable s) { }
+        public void afterTextChanged(Editable s) {
+        }
     }
 }
