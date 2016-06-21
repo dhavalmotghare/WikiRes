@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,13 +45,15 @@ public class SearchResultActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         mSearchItems = new ArrayList<>();
-
         mSearchListAdapter = new SearchListAdapter(this, mSearchItems);
-        mSearchResults = (RecyclerView) findViewById(R.id.rv_search_results);
+
         mSearchField = (EditText) findViewById(R.id.search_query);
+        mSearchResults = (RecyclerView) findViewById(R.id.rv_search_results);
 
         mSearchResults.setHasFixedSize(true);
+
         mLayoutManager = new GridLayoutManager(this, getSpanCount());
+        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mSearchResults.setLayoutManager(mLayoutManager);
 
         mSearchResults.setAdapter(mSearchListAdapter);
@@ -118,7 +121,7 @@ public class SearchResultActivity extends AppCompatActivity {
                                 mWikiApiRequest.cancelRequest();
                             }
                             mWikiApiRequest = new WikiApiRequest(mContext, this);
-                            mWikiApiRequest.query(mSearchTerm, 300, 50);
+                            mWikiApiRequest.query(mSearchTerm, 800, 50);
                         }
                     } else {
                         mSearchItems.clear();
@@ -215,18 +218,18 @@ public class SearchResultActivity extends AppCompatActivity {
     }
 
     protected void showErrorToast(int id) {
-        CharSequence message = getResources().getText(id);
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, id, Toast.LENGTH_LONG).show();
     }
 
     private int getSpanCount() {
-        int columnWidth = getResources().getDimensionPixelSize(R.dimen.grid_item_width);
         Display display = getWindowManager().getDefaultDisplay();
         DisplayMetrics outMetrics = new DisplayMetrics();
         display.getMetrics(outMetrics);
 
         float density = getResources().getDisplayMetrics().density;
         float dpWidth = outMetrics.widthPixels / density;
+        //TODO: Fix this
         return Math.round(dpWidth / 100);
     }
+
 }

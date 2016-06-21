@@ -1,34 +1,36 @@
 package com.dhavalmotghare.wikires;
 
 import android.content.Context;
-import android.content.Intent;
-import android.test.ActivityUnitTestCase;
+import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.SmallTest;
 
 /**
  *
  */
 @SmallTest
-public class SearchTaskTest extends ActivityUnitTestCase<FakeSearchResultActivity> {
+public class SearchTaskTest extends ActivityInstrumentationTestCase2<SearchResultActivity> {
 
     private Context mContext;
-    private FakeSearchResultActivity mSearchResultActivity;
+    private SearchResultActivity mSearchResultActivity;
 
     public SearchTaskTest() {
-        super(FakeSearchResultActivity.class);
+        super(SearchResultActivity.class);
     }
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
         mContext = getInstrumentation().getContext();
-        startActivity();
     }
 
-    public void testSearchTaskValidInput() throws Exception {
+    public void testSearchTaskValidInput() throws Throwable {
         mSearchResultActivity = getActivity();
-        mSearchResultActivity.mSearchField.setText("Blackbird");
-
+        runTestOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mSearchResultActivity.mSearchField.setText("Blackbird");
+            }
+        });
         sleep(4);
 
         assertNotNull(mSearchResultActivity.mSearchItems);
@@ -36,10 +38,14 @@ public class SearchTaskTest extends ActivityUnitTestCase<FakeSearchResultActivit
 
     }
 
-    public void testSearchTaskInvalidInput() throws Exception {
+    public void testSearchTaskInvalidInput() throws Throwable {
         mSearchResultActivity = getActivity();
-        mSearchResultActivity.mSearchField.setText("::::");
-
+        runTestOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mSearchResultActivity.mSearchField.setText("::::");
+            }
+        });
         sleep(4);
 
         assertNotNull(mSearchResultActivity.mSearchItems);
@@ -53,20 +59,6 @@ public class SearchTaskTest extends ActivityUnitTestCase<FakeSearchResultActivit
             Thread.sleep(milliseconds);
         } catch (Exception e) {
 
-        }
-    }
-
-    void startActivity() {
-        try {
-            runTestOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    startActivity(new Intent(Intent.ACTION_MAIN), null, null);
-                }
-            });
-        } catch (Throwable e) {
-            e.printStackTrace();
-            fail();
         }
     }
 }

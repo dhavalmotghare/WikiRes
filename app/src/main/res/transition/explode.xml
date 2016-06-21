@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<transitionSet xmlns:android="http://schemas.android.com/apk/res/android">
+    <changeBounds>
+        <targets>
+            <target android:targetId="@id/search_image" />
+            <target android:targetId="@id/popup_search_image" />
+        </targets>
+    </changeBounds>
+    <changeImageTransform>
+        <targets>
+            <target android:targetId="@id/search_image" />
+            <target android:targetId="@id/popup_search_image" />
+        </targets>
+    </changeImageTransform>
+    <changeBounds>
+        <targets>
+            <target android:targetId="@id/search_item_title" />
+            <target android:targetId="@id/popup_search_item_title" />
+        </targets>
+    </changeBounds>
+    <changeTransform>
+        <targets>
+            <target android:targetId="@id/search_item_title" />
+            <target android:targetId="@id/popup_search_item_title" />
+        </targets>
+    </changeTransform>
+    <changeBounds>
+        <targets>
+            <target android:targetId="@id/search_item_page_id" />
+            <target android:targetId="@id/popup_search_item_page_id" />
+        </targets>
+    </changeBounds>
+    <changeTransform>
+        <targets>
+            <target android:targetId="@id/search_item_page_id" />
+            <target android:targetId="@id/popup_search_item_page_id" />
+        </targets>
+    </changeTransform>
+</transitionSet>

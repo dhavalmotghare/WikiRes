@@ -7,6 +7,6 @@
     <string name="action_search">Search</string>
     <string name="error_network">No network connection available.</string>
     <string name="error_unable_to_fetch">There was some error in fetching data.</string>
-    <string name="title_activity_fake_search_result">FakeSearchResultActivity</string>
-
+    <string name="title_activity_pop_up_image">Image</string>
+    <string name="error_no_image">No Image available</string>
 </resources>

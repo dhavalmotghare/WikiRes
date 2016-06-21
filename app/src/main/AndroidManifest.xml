@@ -22,14 +22,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".FakeSearchResultActivity"
-            android:label="@string/title_activity_fake_search_result"
-            android:parentActivityName=".SearchResultActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.dhavalmotghare.wikires.SearchResultActivity" />
-        </activity>
+            android:name=".PopUpImageActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

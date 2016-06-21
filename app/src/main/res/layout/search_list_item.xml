@@ -1,26 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/search_item"
-    android:layout_width="@dimen/grid_item_width"
-    android:layout_height="@dimen/grid_item_width"
-    android:layout_centerHorizontal="true"
-    android:background="@android:color/white"
-    android:orientation="horizontal">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/item_background"
+    android:orientation="horizontal"
+    android:padding="1dp">
 
     <ImageView
         android:id="@+id/search_image"
         android:layout_width="@dimen/grid_item_width"
         android:layout_height="@dimen/grid_item_width"
+        android:layout_centerInParent="true"
+        android:maxWidth="@dimen/grid_item_width"
+        android:maxHeight="@dimen/grid_item_width"
+        android:transitionName="transition_image"
         android:layout_gravity="center_horizontal|bottom"
         android:background="@color/background_color"
         android:scaleType="centerInside"
         android:src="@mipmap/ic_texture_white_36dp" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:background="@android:color/white"
+        android:layout_alignParentBottom="true"
+        android:background="@color/translucent_black"
         android:orientation="vertical"
         android:paddingBottom="@dimen/padding_gap_small"
         android:paddingLeft="@dimen/padding_content_medium_gap"
@@ -35,7 +39,8 @@
             android:fontFamily="sans-serif-light"
             android:lines="1"
             android:textAllCaps="true"
-            android:textSize="14sp"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size_title"
             android:textStyle="bold" />
 
         <TextView
@@ -43,8 +48,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/darker_gray"
-            android:textSize="12sp" />
+            android:textSize="@dimen/text_size_sub_title" />
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>
 
