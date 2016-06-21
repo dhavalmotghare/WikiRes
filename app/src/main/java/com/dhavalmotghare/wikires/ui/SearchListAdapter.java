@@ -1,75 +1,74 @@
 package com.dhavalmotghare.wikires.ui;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.dhavalmotghare.wikires.R;
 import com.dhavalmotghare.wikires.model.SearchItem;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class SearchListAdapter extends BaseAdapter {
-
+/**
+ */
+public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.ViewHolder> {
     private Context mContext;
-    private static LayoutInflater inflater = null;
-
     private List<SearchItem> mSearchItems;
 
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        TextView itemID;
+        TextView itemTitle;
+        ImageView itemImage;
+        LinearLayout container;
+
+        public ViewHolder(View view) {
+            super(view);
+            container = (LinearLayout) view.findViewById(R.id.search_item);
+            itemID = (TextView) view.findViewById(R.id.search_item_page_id);
+            itemTitle = (TextView) view.findViewById(R.id.search_item_title);
+            itemImage = (ImageView) view.findViewById(R.id.search_image);
+        }
+    }
+
     public SearchListAdapter(Context context, List<SearchItem> searchItems) {
-        mSearchItems = searchItems;
-
         mContext = context;
-        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    }
-
-    @Override
-    public int getCount() {
-        return mSearchItems.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        return position;
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
+        mSearchItems = searchItems;
     }
 
     public void setSearchItems(List<SearchItem> searchItems) {
         this.mSearchItems = searchItems;
     }
 
-    public class Holder {
-        TextView itemID;
-        TextView itemTitle;
-        ImageView itemImage;
+    @Override
+    public SearchListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).
+                inflate(R.layout.search_list_item, parent, false);
+        ViewHolder viewHolder = new ViewHolder(view);
+        return viewHolder;
     }
 
-    @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
-        Holder holder;
-        View view = convertView;
 
-        if (convertView == null) {
-            holder = new Holder();
-            view = inflater.inflate(R.layout.search_list_item, null);
-            holder.itemID = (TextView) view.findViewById(R.id.search_item_page_id);
-            holder.itemTitle = (TextView) view.findViewById(R.id.search_item_title);
-            holder.itemImage = (ImageView) view.findViewById(R.id.search_image);
-            holder.itemImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            view.setTag(holder);
-        } else {
-            holder = (Holder) view.getTag();
-        }
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        holder.itemID.setText(mSearchItems.get(position).getPageID() + "");
+        holder.itemTitle.setText(mSearchItems.get(position).getTitle());
+        holder.itemImage.setImageResource(0);
+        holder.itemImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
         if (mSearchItems.size() <= 0) {
             holder.itemTitle.setText("No Data");
@@ -83,15 +82,25 @@ public class SearchListAdapter extends BaseAdapter {
                 holder.itemImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
                 holder.itemImage.setBackgroundColor(mContext.getResources().getColor(R.color.background_color));
             } else {
-                Picasso.with(mContext)
+//                Picasso.with(mContext)
+//                        .load(mSearchItems.get(position).getThumbnailUrl())
+//                        .noPlaceholder()
+//                        .error(R.mipmap.ic_error_outline_white_36dp)
+//                        .fit()
+//                        .centerCrop()
+//                        .into(holder.itemImage);
+
+                Glide.with(mContext)
                         .load(mSearchItems.get(position).getThumbnailUrl())
-                        .noPlaceholder()
-                        .error(R.mipmap.ic_error_outline_white_36dp)
-                        .fit()
+                        .animate(android.R.anim.fade_in)
                         .centerCrop()
                         .into(holder.itemImage);
             }
         }
-        return view;
+    }
+
+    @Override
+    public int getItemCount() {
+        return mSearchItems.size();
     }
 }

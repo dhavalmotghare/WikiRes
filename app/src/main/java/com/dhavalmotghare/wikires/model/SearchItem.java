@@ -1,6 +1,5 @@
 package com.dhavalmotghare.wikires.model;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -75,34 +74,35 @@ public class SearchItem {
         List<SearchItem> searchItemList = new ArrayList<>();
 
         try {
-            JSONObject queryObject = jsonObject.getJSONObject("query");
-            JSONObject pages = queryObject.getJSONObject("pages");
+            if (jsonObject.has("query") && jsonObject.getJSONObject("query").has("pages")) {
+                JSONObject queryObject = jsonObject.getJSONObject("query");
+                JSONObject pages = queryObject.getJSONObject("pages");
 
-            Iterator<String> pageIDs = pages.keys();
+                Iterator<String> pageIDs = pages.keys();
 
-            while (pageIDs.hasNext()) {
-                String pageID = pageIDs.next();
-                String val = null;
-                try {
-                    JSONObject page = pages.getJSONObject(pageID);
-                    SearchItem searchItem = new SearchItem();
-                    searchItem.setPageID(page.getInt("pageid"));
-                    searchItem.setTitle(page.getString("title"));
-                    if (page.has("thumbnail")) {
-                        JSONObject thumbnail = page.getJSONObject("thumbnail");
-                        searchItem.setThumbnailUrl(thumbnail.getString("source"));
-                        searchItem.setThumbnailHeight(thumbnail.getInt("width"));
-                        searchItem.setThumbnailWidth(thumbnail.getInt("height"));
+                while (pageIDs.hasNext()) {
+                    String pageID = pageIDs.next();
+                    String val = null;
+                    try {
+                        JSONObject page = pages.getJSONObject(pageID);
+                        SearchItem searchItem = new SearchItem();
+                        searchItem.setPageID(page.getInt("pageid"));
+                        searchItem.setTitle(page.getString("title"));
+                        if (page.has("thumbnail")) {
+                            JSONObject thumbnail = page.getJSONObject("thumbnail");
+                            searchItem.setThumbnailUrl(thumbnail.getString("source"));
+                            searchItem.setThumbnailHeight(thumbnail.getInt("width"));
+                            searchItem.setThumbnailWidth(thumbnail.getInt("height"));
+                        }
+                        searchItemList.add(searchItem);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    searchItemList.add(searchItem);
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         return searchItemList;
     }
 }

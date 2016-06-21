@@ -3,18 +3,22 @@ package com.dhavalmotghare.wikires;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.View;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ListView;
+import android.widget.Toast;
 
+import com.dhavalmotghare.wikires.Util.NetworkUtil;
 import com.dhavalmotghare.wikires.model.SearchItem;
 import com.dhavalmotghare.wikires.ui.SearchListAdapter;
 import com.dhavalmotghare.wikires.wikiapi.WikiApiRequest;
@@ -25,12 +29,13 @@ import java.util.List;
 
 public class SearchResultActivity extends AppCompatActivity {
 
-    private EditText mSearchField;
-    private ListView mSearchResults;
-
-    private SearchTask mSearchTask;
-    private List<SearchItem> mSearchItems;
+    private RecyclerView mSearchResults;
     private SearchListAdapter mSearchListAdapter;
+    private GridLayoutManager mLayoutManager;
+
+    protected EditText mSearchField;
+    protected SearchTask mSearchTask;
+    protected List<SearchItem> mSearchItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,11 +46,14 @@ public class SearchResultActivity extends AppCompatActivity {
         mSearchItems = new ArrayList<>();
 
         mSearchListAdapter = new SearchListAdapter(this, mSearchItems);
-        mSearchResults = (ListView) findViewById(R.id.search_results);
+        mSearchResults = (RecyclerView) findViewById(R.id.rv_search_results);
         mSearchField = (EditText) findViewById(R.id.search_query);
 
-        mSearchResults.setAdapter(mSearchListAdapter);
+        mSearchResults.setHasFixedSize(true);
+        mLayoutManager = new GridLayoutManager(this, getSpanCount());
+        mSearchResults.setLayoutManager(mLayoutManager);
 
+        mSearchResults.setAdapter(mSearchListAdapter);
         mSearchTask = new SearchTask(mSearchField, this);
 
         setTitle(R.string.app_name);
@@ -68,13 +76,15 @@ public class SearchResultActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public class SearchTask implements Runnable, WikiApiRequest.WikiAPIListener, TextWatcher {
+    class SearchTask implements Runnable, WikiApiRequest.WikiAPIListener, TextWatcher {
 
         private static final String TAG = "Search Task";
 
         private static final int MINIMUM_WORD_LENGTH = 3;
         private static final long SLEEP_DURATION_MS = 300;
         private static final long TEXT_UPDATE_INTERVAL_MS = 1000 * 3;
+
+        private static final long ERROR_MESSAGE_UPDATE_INTERVAL_MS = 1000 * 6;
 
         private Context mContext;
         private WikiApiRequest mWikiApiRequest;
@@ -85,8 +95,9 @@ public class SearchResultActivity extends AppCompatActivity {
         private boolean mTaskDone;
         private boolean mTaskRunning;
         private long mLastTextUpdateTime;
+        private long mLastErrorUpdateTime;
 
-        public SearchTask(EditText editText, Context context) {
+        SearchTask(EditText editText, Context context) {
             mContext = context;
             mSearchTextSource = editText;
             mSearchTextSource.addTextChangedListener(this);
@@ -107,7 +118,7 @@ public class SearchResultActivity extends AppCompatActivity {
                                 mWikiApiRequest.cancelRequest();
                             }
                             mWikiApiRequest = new WikiApiRequest(mContext, this);
-                            mWikiApiRequest.query(mSearchTerm, 80, 50);
+                            mWikiApiRequest.query(mSearchTerm, 300, 50);
                         }
                     } else {
                         mSearchItems.clear();
@@ -132,7 +143,7 @@ public class SearchResultActivity extends AppCompatActivity {
             mTaskRunning = false;
         }
 
-        public void setTaskDone() {
+        void setTaskDone() {
             this.mTaskDone = true;
         }
 
@@ -151,30 +162,24 @@ public class SearchResultActivity extends AppCompatActivity {
 
         @Override
         public void onComplete(String action, WikiResponse wikiResponse) {
-            if (wikiResponse.getRequestState() == WikiResponse.State.SUCCESS &&
-                    wikiResponse.getResponseObject() != null) {
-                mSearchItems = SearchItem.parseSearchItems(wikiResponse.getResponseObject());
+            if (wikiResponse.getRequestState() == WikiResponse.State.SUCCESS) {
+                if (wikiResponse.getResponseObject() != null)
+                    mSearchItems = SearchItem.parseSearchItems(wikiResponse.getResponseObject());
+                else
+                    mSearchItems.clear();
+            } else if (wikiResponse.getRequestState() == WikiResponse.State.NETWORK_ERROR) {
+                showErrorToast(R.string.error_network);
             } else {
-                mSearchItems.clear();
+                showErrorToast(R.string.error_unable_to_fetch);
             }
             updateList();
-        }
-
-        private void updateList() {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    mSearchListAdapter.setSearchItems(mSearchItems);
-                    mSearchListAdapter.notifyDataSetChanged();
-                }
-            });
         }
 
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
         }
 
-        public void start() {
+        private void start() {
             if (!mTaskRunning) {
                 Thread thread = new Thread(this);
                 thread.setPriority(Thread.MIN_PRIORITY);
@@ -184,11 +189,44 @@ public class SearchResultActivity extends AppCompatActivity {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            start();
+            if (NetworkUtil.isNetworkAvailable(mContext)) {
+                start();
+            } else {
+                if (System.currentTimeMillis() - mLastErrorUpdateTime > ERROR_MESSAGE_UPDATE_INTERVAL_MS) {
+                    mLastErrorUpdateTime = System.currentTimeMillis();
+                    showErrorToast(R.string.error_network);
+                }
+            }
         }
 
         @Override
         public void afterTextChanged(Editable s) {
         }
+    }
+
+    protected void updateList() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mSearchListAdapter.setSearchItems(mSearchItems);
+                mSearchListAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    protected void showErrorToast(int id) {
+        CharSequence message = getResources().getText(id);
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
+    private int getSpanCount() {
+        int columnWidth = getResources().getDimensionPixelSize(R.dimen.grid_item_width);
+        Display display = getWindowManager().getDefaultDisplay();
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        display.getMetrics(outMetrics);
+
+        float density = getResources().getDisplayMetrics().density;
+        float dpWidth = outMetrics.widthPixels / density;
+        return Math.round(dpWidth / 100);
     }
 }

@@ -1,6 +1,8 @@
 package com.dhavalmotghare.wikires.Util;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -146,5 +148,19 @@ public class NetworkUtil {
             ));
         }
         return sb.toString();
+    }
+
+    /**
+     * Check current available network.
+     *
+     * @param context - Context of the Application
+     * @return true if any active network is connected, false otherwise.
+     */
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return (activeNetwork != null && activeNetwork.isConnectedOrConnecting());
     }
 }

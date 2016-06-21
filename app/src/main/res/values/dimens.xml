@@ -32,4 +32,6 @@
     <dimen name="button_corners_radius">3dp</dimen>
     <dimen name="button_stroke_width">1px</dimen>
     <dimen name="padding_horizontal">16dp</dimen>
+
+    <dimen name="grid_item_width">100dp</dimen>
 </resources>

@@ -24,20 +24,17 @@
             android:layout_height="wrap_content"
             android:layout_gravity="top"
             android:layout_marginTop="@dimen/padding_content_medium_gap"
-            android:fontFamily="sans-serif"
             android:background="@drawable/edit_text_background"
+            android:fontFamily="sans-serif"
             android:hint="@string/text_search" />
 
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/search_results"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_marginTop="@dimen/padding_gap_small"
-        android:dividerHeight="2dp"
-        android:divider="@color/background_color"
-        android:background="@color/background_color" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_search_results"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical" />
 </LinearLayout>
 
 

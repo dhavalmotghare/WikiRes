@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.dhavalmotghare.wikires.test">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <instrumentation
+        android:name="pl.polidea.instrumentation.PolideaInstrumentationTestRunner"
+        android:targetPackage="com.dhavalmotghare.wikires.test" />
+
+    <application android:allowBackup="true">
+
+        <uses-library android:name="android.test.runner" />
+
+        <activity
+            android:name="com.dhavalmotghare.wikires.FakeSearchResultActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+    </application>
+
+</manifest>

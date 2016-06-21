@@ -3,6 +3,7 @@
     package="com.dhavalmotghare.wikires">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -19,6 +20,15 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".FakeSearchResultActivity"
+            android:label="@string/title_activity_fake_search_result"
+            android:parentActivityName=".SearchResultActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.dhavalmotghare.wikires.SearchResultActivity" />
         </activity>
     </application>
 
