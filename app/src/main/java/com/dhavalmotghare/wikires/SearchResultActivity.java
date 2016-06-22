@@ -1,5 +1,7 @@
 package com.dhavalmotghare.wikires;
 
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,8 +15,6 @@ import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -32,6 +32,8 @@ import java.util.List;
  */
 public class SearchResultActivity extends AppCompatActivity {
 
+    private static final String TAG_DATA = "data";
+
     private RecyclerView mSearchResults;
     private GridLayoutManager mLayoutManager;
     private SearchListAdapter mSearchListAdapter;
@@ -40,6 +42,8 @@ public class SearchResultActivity extends AppCompatActivity {
     protected SearchTask mSearchTask;
     protected List<SearchItem> mSearchItems;
 
+    private DataFragment mDataFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,8 +51,8 @@ public class SearchResultActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mSearchItems = new ArrayList<>();
-        mSearchListAdapter = new SearchListAdapter(this, mSearchItems);
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        mDataFragment = (DataFragment) fragmentManager.findFragmentByTag(TAG_DATA);
 
         mSearchField = (EditText) findViewById(R.id.search_query);
         mSearchResults = (RecyclerView) findViewById(R.id.rv_search_results);
@@ -59,8 +63,25 @@ public class SearchResultActivity extends AppCompatActivity {
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mSearchResults.setLayoutManager(mLayoutManager);
 
+        if (mDataFragment == null) {
+            mDataFragment = new DataFragment();
+            fragmentManager.beginTransaction().add(mDataFragment, TAG_DATA).commit();
+            mSearchItems = new ArrayList<>();
+            mSearchTask = new SearchTask(mSearchField, this, "");
+        } else {
+            mSearchItems = mDataFragment.getSearchItems();
+            mSearchTask = new SearchTask(mSearchField, this, mDataFragment.getSearchTerm());
+        }
+
+        mSearchListAdapter = new SearchListAdapter(this, mSearchItems);
         mSearchResults.setAdapter(mSearchListAdapter);
-        mSearchTask = new SearchTask(mSearchField, this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mDataFragment.setSearchItems(mSearchItems);
+        mDataFragment.setSearchTerm(mSearchField != null ? mSearchField.getText().toString() : "");
     }
 
     /**
@@ -71,6 +92,7 @@ public class SearchResultActivity extends AppCompatActivity {
         private static final String TAG = "Search Task";
 
         private static final int MINIMUM_WORD_LENGTH = 3;
+
         private static final long SLEEP_DURATION_MS = 300;
         private static final long TEXT_UPDATE_INTERVAL_MS = 1000 * 3;
 
@@ -80,6 +102,7 @@ public class SearchResultActivity extends AppCompatActivity {
         private WikiApiRequest mWikiApiRequest;
 
         private String mSearchTerm;
+        private String mLastSearchedTerm;
         private EditText mSearchTextSource;
 
         private boolean mTaskDone;
@@ -87,9 +110,10 @@ public class SearchResultActivity extends AppCompatActivity {
         private long mLastTextUpdateTime;
         private long mLastErrorUpdateTime;
 
-        SearchTask(EditText editText, Context context) {
+        SearchTask(EditText editText, Context context, String lastSearchedTerm) {
             mContext = context;
             mSearchTextSource = editText;
+            mLastSearchedTerm = lastSearchedTerm;
             mSearchTextSource.addTextChangedListener(this);
             mSearchTerm = editText.getText().toString();
         }
@@ -114,6 +138,7 @@ public class SearchResultActivity extends AppCompatActivity {
                         mSearchItems.clear();
                         updateList();
                     }
+                    mLastSearchedTerm = mSearchTerm;
                 } else {
                     if (TextUtils.isEmpty(mSearchTerm)) {
                         mSearchItems.clear();
@@ -126,7 +151,7 @@ public class SearchResultActivity extends AppCompatActivity {
                 } catch (InterruptedException ie) {
                     Log.i(TAG, "Thread interrupted");
                 }
-                // the user hasn't entered anything for few seconds, lets stop the thread
+                // the user hasn't entered anything for a few seconds, lets stop the thread
                 if (System.currentTimeMillis() - mLastTextUpdateTime > TEXT_UPDATE_INTERVAL_MS) {
                     setTaskDone();
                 }
@@ -142,8 +167,7 @@ public class SearchResultActivity extends AppCompatActivity {
             mSearchTerm = mSearchTextSource.getText().toString();
 
             if (mWikiApiRequest != null) {
-                String currentSearchTerm = mWikiApiRequest.getSearchTerm();
-                if (!(currentSearchTerm == null ? mSearchTerm == null : currentSearchTerm.equals(mSearchTerm))) {
+                if (!(mLastSearchedTerm == null ? mSearchTerm == null : mLastSearchedTerm.equals(mSearchTerm))) {
                     return true;
                 }
                 return false;
