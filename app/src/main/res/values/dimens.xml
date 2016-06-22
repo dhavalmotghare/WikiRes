@@ -25,6 +25,7 @@
     <dimen name="padding_horizontal">16dp</dimen>
 
     <dimen name="grid_item_width">100dp</dimen>
+    <dimen name="image_detail_layout_width">400dp</dimen>
     <dimen name="text_size_title">12sp</dimen>
     <dimen name="text_size_sub_title">10sp</dimen>
     <dimen name="text_size_title_big">16sp</dimen>
