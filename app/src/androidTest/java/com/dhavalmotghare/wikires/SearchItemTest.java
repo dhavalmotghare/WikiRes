@@ -13,6 +13,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * To test {@link SearchItem} parsing
  *
  */
 @SmallTest

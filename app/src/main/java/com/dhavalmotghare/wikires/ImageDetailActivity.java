@@ -8,7 +8,10 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-public class PopUpImageActivity extends AppCompatActivity {
+/**
+ * Activity used to display image detail view.
+ */
+public class ImageDetailActivity extends AppCompatActivity {
 
     public static final String KEY_IMAGE_URL = "image_url";
     public static final String KEY_IMAGE_TITLE = "image_title";

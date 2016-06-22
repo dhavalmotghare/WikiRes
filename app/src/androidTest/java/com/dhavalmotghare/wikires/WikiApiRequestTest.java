@@ -11,7 +11,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 /**
- *
+ * To test Wiki API request
  */
 @SmallTest
 public class WikiApiRequestTest extends InstrumentationTestCase {

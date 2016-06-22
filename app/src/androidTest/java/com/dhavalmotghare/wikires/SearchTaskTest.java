@@ -5,7 +5,7 @@ import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.SmallTest;
 
 /**
- *
+ * To test auto search functionality
  */
 @SmallTest
 public class SearchTaskTest extends ActivityInstrumentationTestCase2<SearchResultActivity> {

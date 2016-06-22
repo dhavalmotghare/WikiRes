@@ -1,8 +1,10 @@
 package com.dhavalmotghare.wikires.ui;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Pair;
@@ -14,7 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dhavalmotghare.wikires.PopUpImageActivity;
+import com.dhavalmotghare.wikires.ImageDetailActivity;
 import com.dhavalmotghare.wikires.R;
 import com.dhavalmotghare.wikires.model.SearchItem;
 import com.squareup.picasso.Picasso;
@@ -22,6 +24,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 /**
+ * Result adapter for the recycle view.
  */
 public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.ViewHolder> {
     private Activity mActivity;
@@ -59,9 +62,11 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Vi
         return viewHolder;
     }
 
-
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
+
+        if (mSearchItems == null || mSearchItems.size() <= 0) return;
+
         holder.itemID.setText(mSearchItems.get(position).getPageID() + "");
         holder.itemTitle.setText(mSearchItems.get(position).getTitle());
         holder.itemImage.setImageResource(0);
@@ -70,18 +75,18 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Vi
             public void onClick(View v) {
 
                 if (!TextUtils.isEmpty(mSearchItems.get(position).getThumbnailUrl())) {
-                    Intent intent = new Intent(mActivity, PopUpImageActivity.class);
-                    intent.putExtra(PopUpImageActivity.KEY_IMAGE_URL, mSearchItems.get(position).getThumbnailUrl());
-                    intent.putExtra(PopUpImageActivity.KEY_IMAGE_TITLE, mSearchItems.get(position).getTitle());
-                    intent.putExtra(PopUpImageActivity.KEY_IMAGE_PAGE_ID, mSearchItems.get(position).getPageID() + "");
+                    Intent intent = new Intent(mActivity, ImageDetailActivity.class);
+                    intent.putExtra(ImageDetailActivity.KEY_IMAGE_URL, mSearchItems.get(position).getThumbnailUrl());
+                    intent.putExtra(ImageDetailActivity.KEY_IMAGE_TITLE, mSearchItems.get(position).getTitle());
+                    intent.putExtra(ImageDetailActivity.KEY_IMAGE_PAGE_ID, mSearchItems.get(position).getPageID() + "");
 
-                    Pair firstPair = Pair.create(holder.itemImage, "transition_image");
-                    Pair secondPair = Pair.create(holder.itemTitle, "transition_image_title");
-                    Pair thirdPair = Pair.create(holder.itemID, "transition_image_id");
-                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(mActivity,
-                            firstPair, secondPair, thirdPair);
-
-                    mActivity.startActivity(intent, options.toBundle());
+                    // Show the activity transition with hero image on api level 21 and above, for
+                    // lower versions fall back to default transition
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        startActivityWithTransition(holder, intent);
+                    } else {
+                        mActivity.startActivity(intent);
+                    }
                 } else {
                     Toast.makeText(mActivity, R.string.error_no_image, Toast.LENGTH_LONG).show();
                 }
@@ -108,6 +113,22 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Vi
                         .into(holder.itemImage);
             }
         }
+    }
+
+    /**
+     * Activity transition animation available on the api level 21 and above
+     *
+     * @param holder
+     * @param intent
+     */
+    @TargetApi(21)
+    private void startActivityWithTransition(ViewHolder holder, Intent intent) {
+        Pair firstPair = Pair.create(holder.itemImage, "transition_image");
+        Pair secondPair = Pair.create(holder.itemTitle, "transition_image_title");
+        Pair thirdPair = Pair.create(holder.itemID, "transition_image_id");
+        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(mActivity,
+                firstPair, secondPair, thirdPair);
+        mActivity.startActivity(intent, options.toBundle());
     }
 
     @Override

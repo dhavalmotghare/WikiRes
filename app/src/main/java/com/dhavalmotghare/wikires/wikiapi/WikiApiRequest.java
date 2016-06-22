@@ -21,7 +21,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *
+ * Wiki API request. Create request object to call WIKI search API. The request can be cancelled any
+ * time by calling the {@link WikiApiRequest#cancelRequest()}.
  */
 public class WikiApiRequest implements Response.Listener<String>, Response.ErrorListener {
 
@@ -60,11 +61,24 @@ public class WikiApiRequest implements Response.Listener<String>, Response.Error
         void onComplete(String action, WikiResponse wikiResponse);
     }
 
+    /**
+     * Create a request object by passing context and {@link com.dhavalmotghare.wikires.wikiapi.WikiApiRequest.WikiAPIListener}
+     *
+     * @param context
+     * @param wikiAPIListener
+     */
     public WikiApiRequest(Context context, WikiAPIListener wikiAPIListener) {
         mContext = context;
         mWikiAPIListener = wikiAPIListener;
     }
 
+    /**
+     * Query wikipedia for images related to the passed search term
+     *
+     * @param searchTerm    - the term to search for
+     * @param thumbnailSize - thumbnail size
+     * @param limit         - max number of results
+     */
     public void query(String searchTerm, int thumbnailSize, int limit) {
         Map<String, String> params = new HashMap<>();
         params.put(KEY_ACTION, ACTION_QUERY);
@@ -83,13 +97,6 @@ public class WikiApiRequest implements Response.Listener<String>, Response.Error
         sendRequest(URL, urlParams, false);
     }
 
-    /**
-     * Send a submission request
-     *
-     * @param url
-     * @param data
-     * @param isPost
-     */
     private void sendRequest(String url, String data, boolean isPost) {
         if (TextUtils.isEmpty(data)) {
             Log.d(TAG, "Data empty. Skip sending request.");

@@ -1,6 +1,5 @@
 <resources>
     <dimen name="app_bar_height">60dp</dimen>
-    <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
 
     <dimen name="activity_horizontal_margin">16dp</dimen>
@@ -23,14 +22,6 @@
     <dimen name="margin_extra_small">17dp</dimen>
     <dimen name="margin_medium">36dp</dimen>
     <dimen name="margin_large">50dp</dimen>
-    <dimen name="popup_margin_small">12dp</dimen>
-    <dimen name="popup_margin_medium">15dp</dimen>
-    <dimen name="popup_margin_extra_large">20dp</dimen>
-    <dimen name="popup_width">250dp</dimen>
-    <dimen name="button_width">160dp</dimen>
-    <dimen name="button_height">32dp</dimen>
-    <dimen name="button_corners_radius">3dp</dimen>
-    <dimen name="button_stroke_width">1px</dimen>
     <dimen name="padding_horizontal">16dp</dimen>
 
     <dimen name="grid_item_width">100dp</dimen>

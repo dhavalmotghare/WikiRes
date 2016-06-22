@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-
+/**
+ * Model class to hold search result
+ */
 public class SearchItem {
 
     private String mTitle;
@@ -82,7 +84,6 @@ public class SearchItem {
 
                 while (pageIDs.hasNext()) {
                     String pageID = pageIDs.next();
-                    String val = null;
                     try {
                         JSONObject page = pages.getJSONObject(pageID);
                         SearchItem searchItem = new SearchItem();

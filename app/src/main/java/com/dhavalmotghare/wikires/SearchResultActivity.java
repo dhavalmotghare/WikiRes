@@ -12,7 +12,6 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,11 +27,14 @@ import com.dhavalmotghare.wikires.wikiapi.WikiResponse;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Main activity class
+ */
 public class SearchResultActivity extends AppCompatActivity {
 
     private RecyclerView mSearchResults;
-    private SearchListAdapter mSearchListAdapter;
     private GridLayoutManager mLayoutManager;
+    private SearchListAdapter mSearchListAdapter;
 
     protected EditText mSearchField;
     protected SearchTask mSearchTask;
@@ -43,6 +45,7 @@ public class SearchResultActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_result);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         mSearchItems = new ArrayList<>();
         mSearchListAdapter = new SearchListAdapter(this, mSearchItems);
@@ -58,27 +61,11 @@ public class SearchResultActivity extends AppCompatActivity {
 
         mSearchResults.setAdapter(mSearchListAdapter);
         mSearchTask = new SearchTask(mSearchField, this);
-
-        setTitle(R.string.app_name);
-        setSupportActionBar(toolbar);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_search_result, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
+    /**
+     * Auto search task. This task would start searching for the images as the user keeps entering
+     */
     class SearchTask implements Runnable, WikiApiRequest.WikiAPIListener, TextWatcher {
 
         private static final String TAG = "Search Task";
@@ -113,7 +100,7 @@ public class SearchResultActivity extends AppCompatActivity {
             mTaskRunning = true;
             mLastTextUpdateTime = System.currentTimeMillis();
             while (!mTaskDone) {
-                if (newInput()) {
+                if (newInput()) { // new input received lets clear out old and make new search request
                     mLastTextUpdateTime = System.currentTimeMillis();
                     if (!TextUtils.isEmpty(mSearchTerm)) {
                         if (mSearchTerm.length() >= MINIMUM_WORD_LENGTH) {
@@ -139,6 +126,7 @@ public class SearchResultActivity extends AppCompatActivity {
                 } catch (InterruptedException ie) {
                     Log.i(TAG, "Thread interrupted");
                 }
+                // the user hasn't entered anything for few seconds, lets stop the thread
                 if (System.currentTimeMillis() - mLastTextUpdateTime > TEXT_UPDATE_INTERVAL_MS) {
                     setTaskDone();
                 }
@@ -228,8 +216,6 @@ public class SearchResultActivity extends AppCompatActivity {
 
         float density = getResources().getDisplayMetrics().density;
         float dpWidth = outMetrics.widthPixels / density;
-        //TODO: Fix this
         return Math.round(dpWidth / 100);
     }
-
 }

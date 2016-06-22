@@ -3,7 +3,7 @@ package com.dhavalmotghare.wikires.wikiapi;
 import org.json.JSONObject;
 
 /**
- *
+ * Response object returned after completion of Wiki API request.
  */
 public class WikiResponse {
 
@@ -60,11 +60,4 @@ public class WikiResponse {
         return mResponseObject;
     }
 
-    public void setRequestState(State mRequestState) {
-        this.mRequestState = mRequestState;
-    }
-
-    public void setResponseObject(JSONObject mResponseObject) {
-        this.mResponseObject = mResponseObject;
-    }
 }
