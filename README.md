@@ -12,6 +12,7 @@ The application demos the use of the following components
 - Handling orientation changes.
 - Writing unit and instrumentation test cases.
 
+
 ![](resources/wkires_application_demo_small.gif)
 
 License
