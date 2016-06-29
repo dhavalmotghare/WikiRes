@@ -17,7 +17,7 @@
         android:maxHeight="@dimen/grid_item_width"
         android:maxWidth="@dimen/grid_item_width"
         android:scaleType="centerInside"
-        android:src="@mipmap/ic_texture_white_36dp"
+        android:src="@drawable/ic_texture_white_36dp"
         android:transitionName="transition_image" />
 
     <LinearLayout

@@ -101,13 +101,13 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Se
             holder.itemImage.setImageResource(0);
 
             if (TextUtils.isEmpty(mSearchItems.get(position).getThumbnailUrl())) {
-                holder.itemImage.setImageResource(R.mipmap.ic_texture_white_36dp);
+                holder.itemImage.setImageResource(R.drawable.ic_texture_white_36dp);
                 holder.itemImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             } else {
                 Picasso.with(mActivity)
                         .load(mSearchItems.get(position).getThumbnailUrl())
                         .noPlaceholder()
-                        .error(R.mipmap.ic_error_outline_white_36dp)
+                        .error(R.drawable.ic_error_outline_white_36dp)
                         .fit()
                         .centerCrop()
                         .into(holder.itemImage);

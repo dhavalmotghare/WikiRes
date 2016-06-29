@@ -43,7 +43,7 @@ public class ImageDetailActivity extends AppCompatActivity {
         Picasso.with(this)
                 .load(mImageUrl)
                 .noPlaceholder()
-                .error(R.mipmap.ic_error_outline_white_36dp)
+                .error(R.drawable.ic_error_outline_white_36dp)
                 .fit()
                 .centerCrop()
                 .into(itemImage);
