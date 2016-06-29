@@ -12,13 +12,13 @@
         android:layout_width="@dimen/grid_item_width"
         android:layout_height="@dimen/grid_item_width"
         android:layout_centerInParent="true"
-        android:maxWidth="@dimen/grid_item_width"
-        android:maxHeight="@dimen/grid_item_width"
-        android:transitionName="transition_image"
         android:layout_gravity="center_horizontal|bottom"
         android:background="@color/background_color"
+        android:maxHeight="@dimen/grid_item_width"
+        android:maxWidth="@dimen/grid_item_width"
         android:scaleType="centerInside"
-        android:src="@mipmap/ic_texture_white_36dp" />
+        android:src="@mipmap/ic_texture_white_36dp"
+        android:transitionName="transition_image" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -41,14 +41,16 @@
             android:textAllCaps="true"
             android:textColor="@android:color/white"
             android:textSize="@dimen/text_size_title"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:transitionName="transition_image_title" />
 
         <TextView
             android:id="@+id/search_item_page_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/darker_gray"
-            android:textSize="@dimen/text_size_sub_title" />
+            android:textSize="@dimen/text_size_sub_title"
+            android:transitionName="transition_image_id" />
     </LinearLayout>
 
 </RelativeLayout>

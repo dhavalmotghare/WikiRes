@@ -1,4 +1,4 @@
-package com.dhavalmotghare.wikires.Util;
+package com.dhavalmotghare.wikires.utility;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

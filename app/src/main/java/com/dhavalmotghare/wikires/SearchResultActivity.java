@@ -1,7 +1,6 @@
 package com.dhavalmotghare.wikires;
 
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -18,7 +17,7 @@ import android.view.Display;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.dhavalmotghare.wikires.Util.NetworkUtil;
+import com.dhavalmotghare.wikires.utility.NetworkUtil;
 import com.dhavalmotghare.wikires.model.SearchItem;
 import com.dhavalmotghare.wikires.ui.SearchListAdapter;
 import com.dhavalmotghare.wikires.wikiapi.WikiApiRequest;

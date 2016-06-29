@@ -12,7 +12,7 @@ import com.android.volley.Response;
 import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
-import com.dhavalmotghare.wikires.Util.NetworkUtil;
+import com.dhavalmotghare.wikires.utility.NetworkUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;

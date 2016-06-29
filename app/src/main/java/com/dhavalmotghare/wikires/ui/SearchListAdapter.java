@@ -26,17 +26,17 @@ import java.util.List;
 /**
  * Result adapter for the recycle view.
  */
-public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.ViewHolder> {
+public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.SearchResultViewHolder> {
     private Activity mActivity;
     private List<SearchItem> mSearchItems;
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class SearchResultViewHolder extends RecyclerView.ViewHolder {
         TextView itemID;
         TextView itemTitle;
         ImageView itemImage;
         RelativeLayout container;
 
-        public ViewHolder(View view) {
+        public SearchResultViewHolder(View view) {
             super(view);
             container = (RelativeLayout) view.findViewById(R.id.search_item);
             itemID = (TextView) view.findViewById(R.id.search_item_page_id);
@@ -55,15 +55,15 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Vi
     }
 
     @Override
-    public SearchListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SearchResultViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).
                 inflate(R.layout.search_list_item, parent, false);
-        ViewHolder viewHolder = new ViewHolder(view);
-        return viewHolder;
+        SearchResultViewHolder searchResultViewHolder = new SearchResultViewHolder(view);
+        return searchResultViewHolder;
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, final int position) {
+    public void onBindViewHolder(final SearchResultViewHolder holder, final int position) {
 
         if (mSearchItems == null || mSearchItems.size() <= 0) return;
 
@@ -122,7 +122,7 @@ public class SearchListAdapter extends RecyclerView.Adapter<SearchListAdapter.Vi
      * @param intent
      */
     @TargetApi(21)
-    private void startActivityWithTransition(ViewHolder holder, Intent intent) {
+    private void startActivityWithTransition(SearchResultViewHolder holder, Intent intent) {
         Pair firstPair = Pair.create(holder.itemImage, "transition_image");
         Pair secondPair = Pair.create(holder.itemTitle, "transition_image_title");
         Pair thirdPair = Pair.create(holder.itemID, "transition_image_id");
