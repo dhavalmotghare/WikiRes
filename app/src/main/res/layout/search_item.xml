@@ -31,7 +31,7 @@
 
         <ImageView
             android:id="@+id/popup_search_image"
-            android:layout_width="@dimen/image_detail_layout_width"
+            android:layout_width="match_parent"
             android:layout_height="@dimen/image_detail_layout_width"
             android:scaleType="fitXY"
             android:transitionName="transition_image" />

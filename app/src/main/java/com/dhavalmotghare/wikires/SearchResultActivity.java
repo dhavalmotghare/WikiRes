@@ -23,6 +23,7 @@ import com.dhavalmotghare.wikires.ui.SearchListAdapter;
 import com.dhavalmotghare.wikires.wikiapi.WikiApiRequest;
 import com.dhavalmotghare.wikires.wikiapi.WikiResponse;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -102,7 +103,7 @@ public class SearchResultActivity extends AppCompatActivity {
 
         private String mSearchTerm;
         private String mLastSearchedTerm;
-        private EditText mSearchTextSource;
+        private WeakReference<EditText> mSearchTextSource;
 
         private boolean mTaskDone;
         private boolean mTaskRunning;
@@ -110,10 +111,10 @@ public class SearchResultActivity extends AppCompatActivity {
         private long mLastErrorUpdateTime;
 
         SearchTask(EditText editText, Context context, String lastSearchedTerm) {
-            mContext = context;
-            mSearchTextSource = editText;
+            mContext = context.getApplicationContext();
+            mSearchTextSource = new WeakReference<EditText>(editText);
             mLastSearchedTerm = lastSearchedTerm;
-            mSearchTextSource.addTextChangedListener(this);
+            mSearchTextSource.get().addTextChangedListener(this);
             mSearchTerm = editText.getText().toString();
         }
 
@@ -163,15 +164,23 @@ public class SearchResultActivity extends AppCompatActivity {
         }
 
         private boolean newInput() {
-            mSearchTerm = mSearchTextSource.getText().toString();
+            if (mSearchTextSource.get() != null) {
+                mSearchTerm = mSearchTextSource.get().getText().toString();
 
-            if (mWikiApiRequest != null) {
-                if (!(mLastSearchedTerm == null ? mSearchTerm == null : mLastSearchedTerm.equals(mSearchTerm))) {
-                    return true;
+                if (mWikiApiRequest != null) {
+                    if (!(mLastSearchedTerm == null ? mSearchTerm == null : mLastSearchedTerm.equals(mSearchTerm))) {
+                        return true;
+                    }
+                    return false;
                 }
+                return true;
+            } else {
+                if (mWikiApiRequest != null) {
+                    mWikiApiRequest.cancelRequest();
+                }
+                setTaskDone();
                 return false;
             }
-            return true;
         }
 
         @Override

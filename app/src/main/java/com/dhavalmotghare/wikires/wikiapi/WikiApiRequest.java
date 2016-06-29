@@ -17,6 +17,7 @@ import com.dhavalmotghare.wikires.utility.NetworkUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,7 +43,7 @@ public class WikiApiRequest implements Response.Listener<String>, Response.Error
 
     private Context mContext;
     private String mCurrentAction;
-    private WikiAPIListener mWikiAPIListener;
+    private WeakReference<WikiAPIListener> mWikiAPIListener;
 
     private boolean mCancelled;
 
@@ -68,7 +69,7 @@ public class WikiApiRequest implements Response.Listener<String>, Response.Error
      */
     public WikiApiRequest(Context context, WikiAPIListener wikiAPIListener) {
         mContext = context;
-        mWikiAPIListener = wikiAPIListener;
+        mWikiAPIListener = new WeakReference<WikiAPIListener>(wikiAPIListener);
     }
 
     /**
@@ -105,14 +106,14 @@ public class WikiApiRequest implements Response.Listener<String>, Response.Error
     }
 
     private void reportFailure(WikiResponse.State state) {
-        if (mWikiAPIListener != null && !mCancelled) {
-            mWikiAPIListener.onComplete(mCurrentAction, new WikiResponse(state));
+        if (mWikiAPIListener != null && mWikiAPIListener.get() != null && !mCancelled) {
+            mWikiAPIListener.get().onComplete(mCurrentAction, new WikiResponse(state));
         }
     }
 
     private void reportSuccess(WikiResponse wikiResponse) {
-        if (mWikiAPIListener != null && !mCancelled) {
-            mWikiAPIListener.onComplete(mCurrentAction, wikiResponse);
+        if (mWikiAPIListener != null && mWikiAPIListener.get() != null && !mCancelled) {
+            mWikiAPIListener.get().onComplete(mCurrentAction, wikiResponse);
         }
     }
 
